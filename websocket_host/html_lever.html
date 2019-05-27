@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+.container1 {
+  width: 100%;
+  height:50vh;
+  background: #ffffff;
+  top: 0;
+  left: 200px;
+}
+
+.slider {
+  -webkit-appearance: slider-vertical;
+  height: 100%;
+  width: 15px;
+}
+
+
+</style>
+</head>
+<body>
+
+
+<p align="center">
+<button onclick="centerAll()" align="center">FIRE</button>
+</p>
+<br><br><br><br><br><br>
+<table style="width:100%;table-layout:fixed"  border="0px" align="center" >
+  <tr>
+  	<td></td>
+    <td>
+    	<div class="container1" >
+  		<input type="range" min="1" max="100" value="50" class="slider" id="leftSlider">
+  		<p><span id="leftValue"></span></p>
+  		</div>
+    </td>
+    <td>
+    	<div class="container1">
+      	<input type="range" min="1" max="100" value="50" class="slider" id="centerSlider">
+      	</div>
+    </td>
+    <td>
+    	<div class="container1">
+      	<input type="range" min="1" max="100" value="50" class="slider" id="rightSlider">
+      	<p><span id="rightValue"></span></p>
+      	</div>
+    </td>
+  </tr>
+</table>
+<br><br><br><br><br><br>
+<p align="center">
+<button onclick="centerAll()" align="center">STOP</button>
+</p>
+<script>
+
+var sliderLeft = document.getElementById("leftSlider");
+var outputLeft = document.getElementById("leftValue");
+outputLeft.innerHTML = sliderLeft.value;
+
+var sliderRight = document.getElementById("rightSlider");
+var outputRight = document.getElementById("rightValue");
+outputRight.innerHTML = sliderRight.value;
+
+var sliderCenter = document.getElementById("centerSlider");
+
+sliderRight.oninput = function() {
+  outputRight.innerHTML = this.value;
+}
+
+sliderLeft.oninput = function() {
+  outputLeft.innerHTML = this.value;
+}
+
+sliderCenter.oninput = function() {
+  outputRight.innerHTML = this.value;
+  outputLeft.innerHTML = this.value;
+  sliderLeft.value = this.value;
+  sliderRight.value = this.value;
+}
+
+centerAll = function() {
+  outputRight.innerHTML = 50;
+  outputLeft.innerHTML = 50;
+  sliderLeft.value = 50;
+  sliderRight.value = 50;
+  sliderCenter.value = 50;
+}
+
+</script>
+
+</body>
+</html>
+
