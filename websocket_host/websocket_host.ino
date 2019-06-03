@@ -54,17 +54,29 @@ void onWebSocketEvent(uint8_t client_num,
       // Print out raw message
       Serial.printf("[%u] Received text: %s\n", client_num, payload);
 
+      String command = getPayloadName(payload);
+
       // Toggle LED
-      if ( strcmp((char *)payload, "toggleLED") == 0 ) {
+      if ( strcmp(command, "toggleLED") == 0 ) {
         led_state = led_state ? 0 : 1;
         Serial.printf("Toggling LED to %u\n", led_state);
         digitalWrite(led_pin, led_state);
 
       // Report the state of the LED
-      } else if ( strcmp((char *)payload, "getLEDState") == 0 ) {
+      } else if ( strcmp(command, "getLEDState") == 0 ) {
         sprintf(msg_buf, "%d", led_state);
         Serial.printf("Sending to [%u]: %s\n", client_num, msg_buf);
-        webSocket.sendTXT(client_num, msg_buf);
+        webSocket.sendTXT(client_num, msg_buf);    
+
+      // Report Left Motor Value
+      } else if ( strcmp(command, "setLeftMotor") == 0 ) {
+        int value = getPayloadValue(payload);
+        Serial.printf("setLeftMotor to %u\n", value);
+        
+      // Report Right Motor Value
+      } else if ( strcmp(command, "setRightMotor") == 0 ) {
+        int value = getPayloadValue(payload);
+        Serial.printf("setRightMotor to %u\n" + value);
 
       // Message not recognized
       } else {
@@ -82,6 +94,15 @@ void onWebSocketEvent(uint8_t client_num,
     default:
       break;
   }
+}
+
+String getPayloadName(uint8_t * payload) {
+    return getValue((char *)payload, ':', 0);
+}
+
+int getPayloadValue() {
+  String valu = getValue((char *)payload, ':', 1);
+  return stringToNumber(value);
 }
 
 // Callback: send homepage
