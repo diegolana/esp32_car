@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<meta charset="utf-8" />
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
@@ -22,44 +22,9 @@ html {
 }
 </style>
 </head>
-<body>
 
-
-<p align="center">
-<button onclick="centerAll()" align="center">LIGHT</button>
-</p>
-<br>
-<table style="width:100%;table-layout:fixed"  border="0px" align="center" >
-  <tr>
-  <tr>
-  	<td></td>
-    <td>
-    	<div class="container1" >
-  		<input type="range" min="1" max="100" value="50" class="slider" id="leftSlider">
-  		<p><span id="leftValue"></span></p>
-  		</div>
-    </td>
-    <td>
-    	<div class="container1">
-      	<input type="range" min="1" max="100" value="50" class="slider" id="centerSlider">
-      	</div>
-    </td>
-    <td>
-    	<div class="container1">
-      	<input type="range" min="1" max="100" value="50" class="slider" id="rightSlider">
-      	<p><span id="rightValue"></span></p>
-      	</div>
-    </td>
-  </tr>
-</table>
-<br>
-<p align="center">
-<button onclick="centerAll()" align="center">STOP</button>
-</p>
-<script>
-
-// Setup websockets
-
+<title>WebSocket Test</title>
+<script language="javascript" type="text/javascript">
 var url = "ws://192.168.4.1:1337/";
 var output;
 var button;
@@ -156,8 +121,7 @@ function onPress() {
 // Call the init function as soon as the page loads
 window.addEventListener("load", init, false);
 
-// Movie levers
-
+////////////// LEVERS /////////////////
 var sliderLeft = document.getElementById("leftSlider");
 var outputLeft = document.getElementById("leftValue");
 outputLeft.innerHTML = sliderLeft.value;
@@ -170,10 +134,12 @@ var sliderCenter = document.getElementById("centerSlider");
 
 sliderRight.oninput = function() {
   outputRight.innerHTML = this.value;
+  doSend("setLeftMotor:"+this.value);
 }
 
 sliderLeft.oninput = function() {
   outputLeft.innerHTML = this.value;
+  doSend("setRightMotor:"+this.value);
 }
 
 sliderCenter.oninput = function() {
@@ -191,8 +157,54 @@ centerAll = function() {
   sliderCenter.value = 50;
 }
 
+
 </script>
 
-</body>
-</html>
+<h2>LED Control</h2>
+
+<table>
+    <tr>
+        <td><button id="toggleButton" onclick="onPress()" disabled>Toggle LED</button></td>
+        <td><canvas id="led" width="50" height="50"></canvas></td>
+    </tr>
+</table>
+
+<div id="output"></div>
+
+
+
+
+<p align="center">
+<button onclick="centerAll()" align="center">LIGHT</button>
+<button id="toggleButton" onclick="onPress()" disabled>Toggle LED</button>
+</p>
+<br>
+<table style="width:100%;table-layout:fixed"  border="0px" align="center" >
+  <tr>
+  <tr>
+  	<td></td>
+    <td>
+    	<div class="container1" >
+  		<input type="range" min="1" max="100" value="50" class="slider" id="leftSlider">
+  		<p><span id="leftValue"></span></p>
+  		</div>
+    </td>
+    <td>
+    	<div class="container1">
+      	<input type="range" min="1" max="100" value="50" class="slider" id="centerSlider">
+      	</div>
+    </td>
+    <td>
+    	<div class="container1">
+      	<input type="range" min="1" max="100" value="50" class="slider" id="rightSlider">
+      	<p><span id="rightValue"></span></p>
+      	</div>
+    </td>
+  </tr>
+</table>
+<br>
+<p align="center">
+<button onclick="centerAll()" align="center">STOP</button>
+</p>
+
 

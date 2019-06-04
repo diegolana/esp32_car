@@ -6,7 +6,7 @@
 #include "index.h"
 
 // Constants
-const char *ssid = "ESP32AP";
+const char *ssid = "ESP32";
 const char *password =  "1234567890";
 const char *msg_toggle_led = "toggleLED";
 const char *msg_get_led = "getLEDState";
@@ -50,40 +50,40 @@ void onWebSocketEvent(uint8_t client_num,
 
     // Handle text messages from client
     case WStype_TEXT:
-
-      // Print out raw message
-      Serial.printf("[%u] Received text: %s\n", client_num, payload);
-
-      String command = getPayloadName(payload);
-
-      // Toggle LED
-      if ( strcmp(command, "toggleLED") == 0 ) {
-        led_state = led_state ? 0 : 1;
-        Serial.printf("Toggling LED to %u\n", led_state);
-        digitalWrite(led_pin, led_state);
-
-      // Report the state of the LED
-      } else if ( strcmp(command, "getLEDState") == 0 ) {
-        sprintf(msg_buf, "%d", led_state);
-        Serial.printf("Sending to [%u]: %s\n", client_num, msg_buf);
-        webSocket.sendTXT(client_num, msg_buf);    
-
-      // Report Left Motor Value
-      } else if ( strcmp(command, "setLeftMotor") == 0 ) {
-        int value = getPayloadValue(payload);
-        Serial.printf("setLeftMotor to %u\n", value);
-        
-      // Report Right Motor Value
-      } else if ( strcmp(command, "setRightMotor") == 0 ) {
-        int value = getPayloadValue(payload);
-        Serial.printf("setRightMotor to %u\n" + value);
-
-      // Message not recognized
-      } else {
-        Serial.println("[%u] Message not recognized");
+      {
+        // Print out raw message
+        Serial.printf("[%u] Received text: %s\n", client_num, payload);
+  
+        char * command = getPayloadName(payload);
+  
+        // Toggle LED
+        if ( strcmp(command, "toggleLED") == 0 ) {
+          led_state = led_state ? 0 : 1;
+          Serial.printf("Toggling LED to %u\n", led_state);
+          digitalWrite(led_pin, led_state);
+  
+        // Report the state of the LED
+        } else if ( strcmp(command, "getLEDState") == 0 ) {
+          sprintf(msg_buf, "%d", led_state);
+          Serial.printf("Sending to [%u]: %s\n", client_num, msg_buf);
+          webSocket.sendTXT(client_num, msg_buf);    
+  
+        // Report Left Motor Value
+        } else if ( strcmp(command, "setLeftMotor") == 0 ) {
+          int value = getPayloadValue(payload);
+          Serial.printf("setLeftMotor to %u\n", value);
+          
+        // Report Right Motor Value
+        } else if ( strcmp(command, "setRightMotor") == 0 ) {
+          int value = getPayloadValue(payload);
+          Serial.printf("setRightMotor to %u\n" + value);
+  
+        // Message not recognized
+        } else {
+          Serial.println("[%u] Message not recognized");
+        }
+        break;
       }
-      break;
-
     // For everything else: do nothing
     case WStype_BIN:
     case WStype_ERROR:
@@ -96,13 +96,30 @@ void onWebSocketEvent(uint8_t client_num,
   }
 }
 
-String getPayloadName(uint8_t * payload) {
-    return getValue((char *)payload, ':', 0);
+char* getPayloadName(uint8_t * payload) {
+    return const_cast<char*>(getValue(String((char *)payload), ':', 0).c_str());
 }
 
-int getPayloadValue() {
-  String valu = getValue((char *)payload, ':', 1);
-  return stringToNumber(value);
+int getPayloadValue(uint8_t * payload) {
+  String value = getValue(String((char *)payload), ':', 1);
+  return value.toInt();
+}
+
+String getValue(String data, char separator, int index)
+{
+  int found = 0;
+  int strIndex[] = {0, -1};
+  int maxIndex = data.length()-1;
+
+  for(int i=0; i<=maxIndex && found<=index; i++){
+    if(data.charAt(i)==separator || i==maxIndex){
+        found++;
+        strIndex[0] = strIndex[1]+1;
+        strIndex[1] = (i == maxIndex) ? i+1 : i;
+    }
+  }
+
+  return found>index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
 
 // Callback: send homepage
