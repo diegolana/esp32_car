@@ -1,4 +1,5 @@
 const char MAIN_page[] PROGMEM = R"=====(
+
 <!DOCTYPE html>
 <html>
 <meta charset="utf-8" />
@@ -40,18 +41,18 @@ html {
     <td></td>
     <td>
       <div class="container1" >
-      <input type="range" min="1" max="100" value="50" class="slider" id="leftSlider">
+      <input type="range" min="-255" max="255" value="0" class="slider" id="leftSlider">
       <p><span id="leftValue"></span></p>
       </div>
     </td>
     <td>
       <div class="container1">
-        <input type="range" min="1" max="100" value="50" class="slider" id="centerSlider">
+        <input type="range" min="-255" max="255" value="0" class="slider" id="centerSlider">
         </div>
     </td>
     <td>
       <div class="container1">
-        <input type="range" min="1" max="100" value="50" class="slider" id="rightSlider">
+        <input type="range" min="-255" max="255" value="0" class="slider" id="rightSlider">
         <p><span id="rightValue"></span></p>
         </div>
     </td>
@@ -188,7 +189,7 @@ sliderCenter.oninput = function() {
 }
 
 function centerAll() {
-  value = 50;
+  value = 0;
   setRight(value);
   setLeft(value);
   sliderLeft.value = value;
@@ -211,6 +212,7 @@ function setLeft(value) {
 
 </body>
 </html>
+
 
 
 

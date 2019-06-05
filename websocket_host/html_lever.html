@@ -36,23 +36,23 @@ html {
 <table style="width:100%;table-layout:fixed"  border="0px" align="center" >
   <tr>
   <tr>
-  	<td></td>
+    <td></td>
     <td>
-    	<div class="container1" >
-  		<input type="range" min="1" max="100" value="50" class="slider" id="leftSlider">
-  		<p><span id="leftValue"></span></p>
-  		</div>
+      <div class="container1" >
+      <input type="range" min="-255" max="255" value="0" class="slider" id="leftSlider">
+      <p><span id="leftValue"></span></p>
+      </div>
     </td>
     <td>
-    	<div class="container1">
-      	<input type="range" min="1" max="100" value="50" class="slider" id="centerSlider">
-      	</div>
+      <div class="container1">
+        <input type="range" min="-255" max="255" value="0" class="slider" id="centerSlider">
+        </div>
     </td>
     <td>
-    	<div class="container1">
-      	<input type="range" min="1" max="100" value="50" class="slider" id="rightSlider">
-      	<p><span id="rightValue"></span></p>
-      	</div>
+      <div class="container1">
+        <input type="range" min="-255" max="255" value="0" class="slider" id="rightSlider">
+        <p><span id="rightValue"></span></p>
+        </div>
     </td>
   </tr>
 </table>
@@ -170,11 +170,11 @@ outputRight.innerHTML = sliderRight.value;
 var sliderCenter = document.getElementById("centerSlider");
 
 sliderRight.oninput = function() {
-	setRight(this.value);
+  setRight(this.value);
 }
 
 sliderLeft.oninput = function() {
-	setLeft(this.value);
+  setLeft(this.value);
 }
 
 sliderCenter.oninput = function() {
@@ -187,7 +187,7 @@ sliderCenter.oninput = function() {
 }
 
 function centerAll() {
-  value = 50;
+  value = 0;
   setRight(value);
   setLeft(value);
   sliderLeft.value = value;

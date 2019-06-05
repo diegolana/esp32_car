@@ -13,7 +13,7 @@ const char *msg_get_led = "getLEDState";
 const int dns_port = 53;
 const int http_port = 80;
 const int ws_port = 1337;
-const int led_pin = LED_BUILTIN;
+const int led_pin = 5;
 
 // Globals
 AsyncWebServer server(80);
@@ -73,12 +73,16 @@ void onWebSocketEvent(uint8_t client_num,
         // Report Left Motor Value
         } else if ( strcmp(command, "setLeftMotor") == 0 ) {
           int value = getPayloadValue(payload);
-          Serial.printf("setLeftMotor to %u\n", value);
+          Serial.print("setLeftMotor to ");
+          Serial.println(value);
+          loopMotors(value);
           
         // Report Right Motor Value
         } else if ( strcmp(command, "setRightMotor") == 0 ) {
           int value = getPayloadValue(payload);
-          Serial.printf("setRightMotor to %u\n", value);
+          Serial.print("setRightMotor to ");
+          Serial.println(value);
+
   
         // Message not recognized
         } else {
@@ -157,6 +161,8 @@ void onPageNotFound(AsyncWebServerRequest *request) {
 
 void setup(){
 
+  setupMotors();
+
   // Init LED and turn off
   pinMode(led_pin, OUTPUT);
   digitalWrite(led_pin, LOW);
@@ -200,4 +206,5 @@ void loop() {
   
   // Look for and handle WebSocket data
   webSocket.loop();
+  //loopMotors();
 }
