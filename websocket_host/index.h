@@ -1,6 +1,6 @@
 const char MAIN_page[] PROGMEM = R"=====(
-
 <!DOCTYPE html>
+<html>
 <meta charset="utf-8" />
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,7 +26,43 @@ html {
 </head>
 
 <title>WebSocket Test</title>
-<script language="javascript" type="text/javascript">
+<body>
+
+
+<p align="center">
+<canvas id="led" width="50" height="50"></canvas><br>
+<button onclick="onLedPressed()" align="center">LIGHT</button>
+</p>
+<br>
+<table style="width:100%;table-layout:fixed"  border="0px" align="center" >
+  <tr>
+  <tr>
+    <td></td>
+    <td>
+      <div class="container1" >
+      <input type="range" min="1" max="100" value="50" class="slider" id="leftSlider">
+      <p><span id="leftValue"></span></p>
+      </div>
+    </td>
+    <td>
+      <div class="container1">
+        <input type="range" min="1" max="100" value="50" class="slider" id="centerSlider">
+        </div>
+    </td>
+    <td>
+      <div class="container1">
+        <input type="range" min="1" max="100" value="50" class="slider" id="rightSlider">
+        <p><span id="rightValue"></span></p>
+        </div>
+    </td>
+  </tr>
+</table>
+<br>
+<p align="center">
+<button onclick="centerAll()" align="center">STOP</button>
+</p>
+
+<script>
 var url = "ws://192.168.4.1:1337/";
 var output;
 var button;
@@ -45,7 +81,7 @@ function init() {
     context.lineWidth = 3;
     context.strokeStyle = "black";
     context.stroke();
-    context.fillStyle = "black";
+    context.fillStyle = "white";
     context.fill();
     
     // Connect to WebSocket server
@@ -94,12 +130,12 @@ function onMessage(evt) {
     switch(evt.data) {
         case "0":
             console.log("LED is off");
-            context.fillStyle = "black";
+            context.fillStyle = "white";
             context.fill();
             break;
         case "1":
             console.log("LED is on");
-            context.fillStyle = "red";
+            context.fillStyle = "blue";
             context.fill();
             break;
         default:
@@ -116,7 +152,7 @@ function doSend(message) {
     websocket.send(message);
 }
 // Called whenever the HTML button is pressed
-function onPress() {
+function onLedPressed() {
     doSend("toggleLED");
     doSend("getLEDState");
 }
@@ -135,80 +171,46 @@ outputRight.innerHTML = sliderRight.value;
 var sliderCenter = document.getElementById("centerSlider");
 
 sliderRight.oninput = function() {
-  outputRight.innerHTML = this.value;
-  doSend("setLeftMotor:"+this.value);
+  setRight(this.value);
 }
 
 sliderLeft.oninput = function() {
-  outputLeft.innerHTML = this.value;
-  doSend("setRightMotor:"+this.value);
+  setLeft(this.value);
 }
 
 sliderCenter.oninput = function() {
-  outputRight.innerHTML = this.value;
-  outputLeft.innerHTML = this.value;
-  sliderLeft.value = this.value;
-  sliderRight.value = this.value;
+  value = this.value;
+  setRight(value);
+  setLeft(value);
+  sliderLeft.value = value;
+  sliderRight.value = value;
+  sliderCenter.value = value;
 }
 
-centerAll = function() {
-  outputRight.innerHTML = 50;
-  outputLeft.innerHTML = 50;
-  sliderLeft.value = 50;
-  sliderRight.value = 50;
-  sliderCenter.value = 50;
+function centerAll() {
+  value = 50;
+  setRight(value);
+  setLeft(value);
+  sliderLeft.value = value;
+  sliderRight.value = value;
+  sliderCenter.value = value;
+}
+
+function setRight(value) {
+  outputRight.innerHTML = value;
+  doSend("setLeftMotor:"+value);
+}
+
+function setLeft(value) {
+  outputLeft.innerHTML = value;
+  doSend("setRightMotor:"+value);
 }
 
 
 </script>
 
-<h2>LED Control</h2>
-
-<table>
-    <tr>
-        <td><button id="toggleButton" onclick="onPress()" disabled>Toggle LED</button></td>
-        <td><canvas id="led" width="50" height="50"></canvas></td>
-    </tr>
-</table>
-
-<div id="output"></div>
-
-
-
-
-<p align="center">
-<button onclick="centerAll()" align="center">LIGHT</button>
-<button id="toggleButton" onclick="onPress()" disabled>Toggle LED</button>
-</p>
-<br>
-<table style="width:100%;table-layout:fixed"  border="0px" align="center" >
-  <tr>
-  <tr>
-    <td></td>
-    <td>
-      <div class="container1" >
-      <input type="range" min="1" max="100" value="50" class="slider" id="leftSlider">
-      <p><span id="leftValue"></span></p>
-      </div>
-    </td>
-    <td>
-      <div class="container1">
-        <input type="range" min="1" max="100" value="50" class="slider" id="centerSlider">
-        </div>
-    </td>
-    <td>
-      <div class="container1">
-        <input type="range" min="1" max="100" value="50" class="slider" id="rightSlider">
-        <p><span id="rightValue"></span></p>
-        </div>
-    </td>
-  </tr>
-</table>
-<br>
-<p align="center">
-<button onclick="centerAll()" align="center">STOP</button>
-</p>
-
+</body>
+</html>
 
 
 

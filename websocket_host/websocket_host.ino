@@ -55,6 +55,8 @@ void onWebSocketEvent(uint8_t client_num,
         Serial.printf("[%u] Received text: %s\n", client_num, payload);
   
         char * command = getPayloadName(payload);
+        Serial.printf("command: %s\n", command);
+       
   
         // Toggle LED
         if ( strcmp(command, "toggleLED") == 0 ) {
@@ -76,11 +78,11 @@ void onWebSocketEvent(uint8_t client_num,
         // Report Right Motor Value
         } else if ( strcmp(command, "setRightMotor") == 0 ) {
           int value = getPayloadValue(payload);
-          Serial.printf("setRightMotor to %u\n" + value);
+          Serial.printf("setRightMotor to %u\n", value);
   
         // Message not recognized
         } else {
-          Serial.println("[%u] Message not recognized");
+          Serial.println("Message not recognized\n");
         }
         break;
       }
