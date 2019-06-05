@@ -1,6 +1,7 @@
 
 // use first channel of 16 channels (started from zero)
 #define LEDC_CHANNEL_0     0
+#define LEDC_CHANNEL_5     5
 
 // use 13 bit precission for LEDC timer
 #define LEDC_TIMER_13_BIT  13
@@ -9,7 +10,8 @@
 #define LEDC_BASE_FREQ     5000
 
 // fade LED PIN (replace with LED_BUILTIN constant for built-in LED)
-#define LED_PIN            LED_BUILTIN
+#define MOTOR_RIGTH_PIN 13
+#define MOTOR_LEFT_PIN 23
 
 int brightness = 0;    // how bright the LED is
 int fadeAmount = 5;    // how many points to fade the LED by
@@ -27,27 +29,28 @@ void ledcAnalogWrite(uint8_t channel, uint32_t value, uint32_t valueMax = 255) {
 void setupMotors() {
   // Setup timer and attach timer to a led pin
   ledcSetup(LEDC_CHANNEL_0, LEDC_BASE_FREQ, LEDC_TIMER_13_BIT);
-  ledcAttachPin(LED_PIN, LEDC_CHANNEL_0);
+  ledcAttachPin(MOTOR_RIGTH_PIN, LEDC_CHANNEL_0);
+
+  ledcSetup(LEDC_CHANNEL_5, LEDC_BASE_FREQ, LEDC_TIMER_13_BIT);
+  ledcAttachPin(MOTOR_LEFT_PIN, LEDC_CHANNEL_5);
 }
 
-void loopMotors(int value) {
-  // set the brightness on LEDC channel 0
-
+void analogMotorRight(int value) {
   if (value < 1) {
     value = value * -1;
   }
   ledcAnalogWrite(LEDC_CHANNEL_0, value);
-  Serial.print("Motor -> ");
+  Serial.print("Motor Right -> ");
   Serial.println(value);
+  //delay(30);
+}
 
-  // change the brightness for next time through the loop:
-  //brightness = brightness + fadeAmount;
-  //brightness = value;
-  
-//  // reverse the direction of the fading at the ends of the fade:
-//  if (brightness <= 0 || brightness >= 255) {
-//    fadeAmount = -fadeAmount;
-//  }
-  // wait for 30 milliseconds to see the dimming effect
+void analogMotorLeft(int value) {
+  if (value < 1) {
+    value = value * -1;
+  }
+  ledcAnalogWrite(LEDC_CHANNEL_5, value);
+  Serial.print("Motor Left -> ");
+  Serial.println(value);
   //delay(30);
 }
